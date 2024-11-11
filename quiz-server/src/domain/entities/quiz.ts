@@ -7,7 +7,9 @@ export class Quiz {
     public category: string
   ) {}
 
-  validate(): boolean {
-    return this.name.trim().length > 0;
+  validate(): void {
+    if (this.name.trim().length <= 0) {
+      throw new Error("Invalid quiz data");
+    }
   }
 }

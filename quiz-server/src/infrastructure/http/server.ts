@@ -11,5 +11,3 @@ const start = async () => {
 };
 
 start();
-
-//https://github.com/zentered/demo-async-fastify-with-jest

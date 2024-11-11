@@ -1,10 +1,13 @@
 import Fastify from "fastify";
-import quizModule from "./moduls/quizModule";
-import { QuizRepository } from "./repository/quizRepository";
-import { QuizService, IQuizService } from "./services/quizService";
 import { MongoClient, Db } from "mongodb";
 import fastifyEnv from "@fastify/env";
+import {
+  IQuizService,
+  QuizService,
+} from "../../application/services/quizService";
 import config, { ConfigType } from "./config/config";
+import { QuizRepository } from "../repository/quizRepository";
+import quizRoutes from "./routes/quiz";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -22,10 +25,6 @@ export default async function build() {
   try {
     await fastify.register(fastifyEnv, config());
 
-    if (!fastify.config) {
-      throw new Error("fastify.config is still undefined");
-    }
-
     await fastify.register(require("@fastify/mongodb"), {
       url: fastify.config.DB_URI,
     });
@@ -33,7 +32,7 @@ export default async function build() {
     const quizRepository = QuizRepository(fastify.mongo.db);
     fastify.decorate("quizService", QuizService(quizRepository));
 
-    fastify.register(quizModule, {});
+    fastify.register(quizRoutes, {});
     await fastify.ready();
   } catch (error) {
     fastify.log.error("Error initializing application:", error);

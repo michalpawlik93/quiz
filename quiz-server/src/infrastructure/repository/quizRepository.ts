@@ -1,5 +1,5 @@
-import { Quiz } from "../models/quiz";
 import { Db, ObjectId } from "mongodb";
+import { Quiz } from "../../domain/entities/quiz";
 
 export interface IQuizRepository {
   createQuiz: (quiz: Quiz) => Promise<void>;
