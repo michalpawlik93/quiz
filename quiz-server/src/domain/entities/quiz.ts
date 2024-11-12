@@ -3,7 +3,6 @@ export class Quiz {
     public id: string,
     public name: string,
     public description: string,
-    public createdDate: Date,
     public category: string
   ) {}
 
@@ -13,3 +12,5 @@ export class Quiz {
     }
   }
 }
+
+export type QuizId = Pick<Quiz, "id">;

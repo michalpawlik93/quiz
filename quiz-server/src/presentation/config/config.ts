@@ -8,7 +8,7 @@ export default function () {
       : Environment.Development;
   return {
     dotenv: {
-      path: path.resolve(__dirname, `../../../../${envFile}`),
+      path: path.resolve(__dirname, `../../../${envFile}`),
       debug: true,
     },
     schema: {

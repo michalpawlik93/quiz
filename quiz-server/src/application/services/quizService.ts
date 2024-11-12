@@ -1,6 +1,6 @@
 import { Quiz } from "../../domain/entities/quiz";
-import { QuizDto, quizMapper } from "../../infrastructure/http/dto/quizDto";
-import { IQuizRepository } from "../../infrastructure/repository/quizRepository";
+import { IQuizRepository } from "../../persistance/repositories/quizRepository";
+import { QuizDto, quizMapper } from "../../presentation/dto/quizDto";
 
 export interface IQuizService {
   createQuiz: (dto: QuizDto) => Promise<void>;

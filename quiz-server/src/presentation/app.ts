@@ -1,13 +1,10 @@
 import Fastify from "fastify";
 import { MongoClient, Db } from "mongodb";
 import fastifyEnv from "@fastify/env";
-import {
-  IQuizService,
-  QuizService,
-} from "../../application/services/quizService";
 import config, { ConfigType } from "./config/config";
-import { QuizRepository } from "../repository/quizRepository";
 import quizRoutes from "./routes/quiz";
+import { IQuizService, QuizService } from "../application/services/quizService";
+import { QuizRepository } from "../persistance/repositories/quizRepository";
 
 declare module "fastify" {
   interface FastifyInstance {
