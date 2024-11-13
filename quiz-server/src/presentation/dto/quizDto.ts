@@ -16,3 +16,13 @@ export const quizDtoJsonSchema = S.object()
   .prop("name", S.string().required())
   .prop("description", S.string().required())
   .prop("category", S.string().required());
+
+export const quizDtoResponseJsonSchema = S.object()
+  .prop("id", S.string().raw({ nullable: true }))
+  .prop("name", S.string())
+  .prop("description", S.string())
+  .prop("category", S.string());
+
+export const quizzesDtoResponseJsonSchema = S.array().items(
+  quizDtoResponseJsonSchema
+);

@@ -1,10 +1,23 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
-import { QuizDto, quizDtoJsonSchema } from "../dto/quizDto";
+import {
+  QuizDto,
+  quizDtoJsonSchema,
+  quizDtoResponseJsonSchema,
+  quizzesDtoResponseJsonSchema,
+} from "../dto/quizDto";
 import S from "fluent-json-schema";
 
 export default async function quizRoutes(fastify: FastifyInstance) {
+  fastify.get(
+    "/quizzes",
+    getAllSchema,
+    async (_request: FastifyRequest, reply: FastifyReply) => {
+      const quiz = await fastify.quizService.getAll();
+      return reply.send(quiz);
+    }
+  );
   fastify.get<{ Params: { id: string } }>(
-    "/quiz/:id",
+    "/quizzes/:id",
     getSchema,
     async (
       request: FastifyRequest<{ Params: { id: string } }>,
@@ -20,7 +33,7 @@ export default async function quizRoutes(fastify: FastifyInstance) {
   );
 
   fastify.post<{ Body: QuizDto }>(
-    "/quiz",
+    "/quizzes",
     postSchema,
     async (request: FastifyRequest<{ Body: QuizDto }>, reply: FastifyReply) => {
       try {
@@ -40,7 +53,7 @@ export default async function quizRoutes(fastify: FastifyInstance) {
 const messageResponseSchema = S.object().prop("message", S.string()).required();
 const paramsSchema = S.object().prop("id", S.string().required());
 
-export const postSchema = {
+const postSchema = {
   schema: {
     body: quizDtoJsonSchema,
     response: {
@@ -50,12 +63,20 @@ export const postSchema = {
   },
 };
 
-export const getSchema = {
+const getSchema = {
   schema: {
     params: paramsSchema,
     response: {
-      200: quizDtoJsonSchema,
+      200: quizDtoResponseJsonSchema,
       404: messageResponseSchema,
+    },
+  },
+};
+
+const getAllSchema = {
+  schema: {
+    response: {
+      200: quizzesDtoResponseJsonSchema,
     },
   },
 };

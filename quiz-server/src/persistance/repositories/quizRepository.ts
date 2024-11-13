@@ -5,6 +5,7 @@ import { Quiz } from "../../domain/entities/quiz";
 export interface IQuizRepository {
   createQuiz: (quiz: Quiz) => Promise<void>;
   findQuizById: (id: string) => Promise<Quiz | null>;
+  getAll: () => Promise<Quiz[]>;
 }
 
 export const QuizRepository = (db: Db): IQuizRepository => {
@@ -30,7 +31,26 @@ export const QuizRepository = (db: Db): IQuizRepository => {
         return null;
       }
       const { _id, ...quiz } = result;
-      return quiz as Quiz;
+      return {
+        id: _id.toString(),
+        ...quiz,
+      } as Quiz;
+    },
+
+    async getAll(): Promise<Quiz[]> {
+      const result = await db.collection("quizzes").find().toArray();
+
+      if (!result || result.length === 0) {
+        return [];
+      }
+
+      return result.map(
+        ({ _id, ...quiz }) =>
+          ({
+            id: _id.toString(),
+            ...quiz,
+          } as Quiz)
+      );
     },
   };
 };

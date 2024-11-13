@@ -5,6 +5,7 @@ import { QuizDto, quizMapper } from "../../presentation/dto/quizDto";
 export interface IQuizService {
   createQuiz: (dto: QuizDto) => Promise<void>;
   findQuizById: (id: string) => Promise<Quiz | null>;
+  getAll: () => Promise<Quiz[]>;
 }
 
 export const QuizService = (quizRepo: IQuizRepository): IQuizService => {
@@ -17,6 +18,9 @@ export const QuizService = (quizRepo: IQuizRepository): IQuizService => {
 
     async findQuizById(id: string) {
       return await quizRepo.findQuizById(id);
+    },
+    async getAll() {
+      return await quizRepo.getAll();
     },
   };
 };

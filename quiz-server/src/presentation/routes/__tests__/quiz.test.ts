@@ -6,10 +6,18 @@ describe("Quiz Routes", () => {
   it("should return 404 if quiz is not found", async () => {
     const response = await app.inject({
       method: "GET",
-      url: "/quiz/6730d5ee85de10dc9f370111",
+      url: "/quizzes/6730d5ee85de10dc9f370111",
     });
     expect(response.statusCode).toBe(404);
     expect(response.json()).toEqual({ message: "Quiz not found" });
+  });
+
+  it("should return empty array if quizzes are not found", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: "/quizzes",
+    });
+    expect(response.statusCode).toBe(200);
   });
 
   it("should create a new quiz", async () => {
@@ -22,7 +30,7 @@ describe("Quiz Routes", () => {
 
     const response = await app.inject({
       method: "POST",
-      url: "/quiz",
+      url: "/quizzes",
       payload: newQuiz,
     });
 
@@ -37,7 +45,7 @@ describe("Quiz Routes", () => {
 
     const response = await app.inject({
       method: "POST",
-      url: "/quiz",
+      url: "/quizzes",
       payload: invalidQuiz,
     });
 
