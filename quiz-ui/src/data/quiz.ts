@@ -18,7 +18,11 @@ export async function getQuiz(id: string): Promise<Quiz | null> {
 
 export async function getAllQuizzes(): Promise<Quiz[]> {
   try {
-    const response = await fetch("http://localhost:3000/quizzes");
+    const response = await fetch("http://localhost:3000/quizzes", {
+      next: {
+        revalidate: 600, // invalidate Data cache in 1h
+      },
+    });
     if (!response.ok) {
       console.error(`Failed to fetch quizzes: ${response.statusText}`);
       return [];
@@ -52,5 +56,4 @@ export type Quiz = {
   name: string;
   description: string;
   category: string;
-  createdDate?: string;
 };

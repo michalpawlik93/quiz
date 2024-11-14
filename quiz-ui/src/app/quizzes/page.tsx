@@ -1,13 +1,12 @@
 "use server";
 
-import { createQuiz, getAllQuizzes, Quiz } from "@/data/quiz";
+import { createQuiz, Quiz } from "@/data/quiz";
 import { QuizFrom } from "./_components/_quizeForm";
 import { revalidatePath } from "next/cache";
-import { QuizList } from "./_components/_quizList";
+import QuizListContiner from "./_components/_quizListContainer";
+import { Suspense } from "react";
 
 export default async function QuizessPage() {
-  const quizes = await getAllQuizzes();
-
   async function create(formData: FormData) {
     "use server";
     const quiz: Quiz = {
@@ -23,7 +22,9 @@ export default async function QuizessPage() {
   return (
     <div className="flex flex-col items-center min-h-screen p-8 sm:p-20 gap-8 font-sans">
       <QuizFrom onSubmit={create} />
-      <QuizList quizes={quizes} />
+      <Suspense fallback="List is loading...">
+        <QuizListContiner />
+      </Suspense>
     </div>
   );
 }
