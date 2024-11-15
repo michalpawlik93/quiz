@@ -1,22 +1,32 @@
-"use server";
+export type Result<T> =
+  | { success: true; data: T; error: null }
+  | { success: false; data: null; error: string };
 
-export async function getQuiz(id: string): Promise<Quiz | null> {
+export type Quiz = {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+};
+
+export async function getQuiz(id: string): Promise<Result<Quiz>> {
   try {
     const response = await fetch(`http://localhost:3000/quizzes/${id}`);
     if (!response.ok) {
-      console.error(
-        `Failed to fetch quiz with ID ${id}: ${response.statusText}`
-      );
-      return null;
+      return {
+        success: false,
+        data: null,
+        error: `Failed to fetch quiz with ID ${id}: ${response.statusText}`,
+      };
     }
-    return response.json();
-  } catch (error) {
-    console.error("Error fetching quiz:", error);
-    return null;
+    const data = await response.json();
+    return { success: true, data, error: null };
+  } catch (error: unknown) {
+    return { success: false, data: null, error: parseError(error) };
   }
 }
 
-export async function getAllQuizzes(): Promise<Quiz[]> {
+export async function getAllQuizzes(): Promise<Result<Quiz[]>> {
   try {
     const response = await fetch("http://localhost:3000/quizzes", {
       next: {
@@ -24,17 +34,20 @@ export async function getAllQuizzes(): Promise<Quiz[]> {
       },
     });
     if (!response.ok) {
-      console.error(`Failed to fetch quizzes: ${response.statusText}`);
-      return [];
+      return {
+        success: false,
+        data: null,
+        error: `Failed to fetch quizzes: ${response.statusText}`,
+      };
     }
-    return response.json();
-  } catch (error) {
-    console.error("Error fetching quizzes:", error);
-    return [];
+    const data = await response.json();
+    return { success: true, data, error: null };
+  } catch (error: unknown) {
+    return { success: false, data: null, error: parseError(error) };
   }
 }
 
-export async function createQuiz(dto: Quiz): Promise<void> {
+export async function createQuiz(dto: Quiz): Promise<Result<boolean>> {
   try {
     const response = await fetch("http://localhost:3000/quizzes", {
       method: "POST",
@@ -44,16 +57,17 @@ export async function createQuiz(dto: Quiz): Promise<void> {
       body: JSON.stringify(dto),
     });
     if (!response.ok) {
-      console.error(`Failed to create quiz: ${response.statusText}`);
+      return {
+        success: false,
+        data: null,
+        error: `Failed to create quiz: ${response.statusText}`,
+      };
     }
-  } catch (error) {
-    console.error("Error creating quiz:", error);
+    return { success: true, data: true, error: null };
+  } catch (error: unknown) {
+    return { success: false, data: null, error: parseError(error) };
   }
 }
 
-export type Quiz = {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-};
+const parseError = (error: unknown) =>
+  error instanceof Error ? error.message : "Unknown error occurred";

@@ -8,7 +8,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 function Button({ label, children, ...props }: PropsWithChildren<ButtonProps>) {
   const { pending } = useFormStatus();
-
   return (
     <button
       {...props}

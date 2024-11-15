@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: "Quiz App",
@@ -30,6 +32,7 @@ export default function RootLayout({
           </div>
         </nav>
         <main className="p-8">{children}</main>
+        <ToastContainer position="top-right" />
       </body>
     </html>
   );
